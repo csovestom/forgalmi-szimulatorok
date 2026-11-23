@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forgalmi szimulátorok</title>
+<meta name="description" content="Magyar vasútállomások forgalmi szimulátorai Dominó pulttal: Dunaharaszti, Kőbánya-Kispest, Budapest-Keleti.">
+<meta name="theme-color" content="#4d6152">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23667a69'/%3E%3Crect x='0' y='29' width='64' height='6' fill='%23ece6d2'/%3E%3Ccircle cx='46' cy='16' r='8' fill='%2338b34f' stroke='%23111' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paint:#667a69;
+  --paint-dark:#4d6152;
+  --seam:#3e4f41;
+  --track:#ece6d2;
+  --enamel:#e9e2cb;
+  --ink:#1e1c16;
+  --red:#d8321f;
+  --yellow:#e8b72a;
+  --green:#38b34f;
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --wear:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .03' numOctaves='4' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .12 0 0 0 0 .08 0 0 0 -2.4 1.25'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+  --brush:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.002 .9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23b)'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box}
+html{background:var(--paint-dark)}
+body{
+  margin:0;color:var(--ink);font:15px/1.55 "IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  background:var(--noise),var(--wear),var(--paint-dark);
+}
+a{color:inherit}
+
+.cabinet{
+  max-width:980px;margin:28px auto;padding:30px 28px 34px;position:relative;
+  background:var(--noise),var(--brush),var(--paint);
+  border:2px solid #263028;
+  box-shadow:inset 0 0 0 4px #7d917f,inset 0 0 0 6px #2f3b31,0 12px 0 #2b362d;
+}
+.screw{position:absolute;width:14px;height:14px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#d7d4c8,#77766c 65%,#3b3b35);
+  box-shadow:0 1px 0 #fff3,inset 0 0 0 1px #0006}
+.screw::after{content:"";position:absolute;left:2px;right:2px;top:6px;height:2px;background:#2d2d28;transform:rotate(var(--r,35deg))}
+.tl{left:10px;top:10px}.tr{right:10px;top:10px;--r:-20deg}.bl{left:10px;bottom:10px;--r:70deg}.br{right:10px;bottom:10px;--r:10deg}
+
+.enamel{
+  background:var(--noise),var(--enamel);color:var(--ink);
+  border:2px solid #1e1c16;border-radius:3px;
+  box-shadow:inset 0 0 0 3px var(--enamel),inset 0 0 0 4px #1e1c16,0 2px 0 #0005;
+}
+header.enamel{padding:18px 22px 16px;text-align:center;max-width:640px;margin:0 auto}
+header small{font-size:12px;letter-spacing:.3em;text-transform:uppercase}
+h1{margin:4px 0 2px;font:700 clamp(34px,7vw,58px)/1 "Barlow Condensed",sans-serif;letter-spacing:.04em;text-transform:uppercase}
+header p{margin:0;font-size:13px}
+
+.tiles{
+  margin:28px 0 0;
+  background-image:linear-gradient(var(--seam) 1px,transparent 1px),linear-gradient(90deg,var(--seam) 1px,transparent 1px);
+  background-size:36px 36px;border:1px solid var(--seam);
+}
+.tiles svg{display:block;width:100%;height:auto}
+
+.intro{margin:28px auto 0;max-width:720px;padding:16px 20px}
+.intro p{margin:0 0 10px}
+.intro p:last-child{margin:0;font-size:13px;opacity:.75}
+
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:30px}
+.el{display:block;text-decoration:none;color:var(--track)}
+.el .face{
+  position:relative;aspect-ratio:3/2;
+  background:var(--noise),#5b6e5e;border:2px solid #263028;
+  box-shadow:inset 0 2px 0 #ffffff1a,inset 0 -3px 0 #0003;
+}
+.el .face svg{position:absolute;inset:0;width:100%;height:100%}
+.knob{
+  position:absolute;right:14px;bottom:14px;width:38px;height:38px;border-radius:50%;
+  background:radial-gradient(circle at 36% 30%,#ffffff70 0 10%,transparent 32%),var(--c);
+  border:4px solid #151515;box-shadow:0 3px 0 #000;
+  transition:transform .08s,box-shadow .08s;
+}
+.el:hover .knob,.el:focus-visible .knob{transform:translateY(3px);box-shadow:0 0 0 #000}
+.el:focus-visible{outline:3px dashed var(--enamel);outline-offset:4px}
+.el .tag{margin-top:10px;padding:8px 12px 9px;text-align:left}
+.el .tag b{display:block;font:700 22px/1.1 "Barlow Condensed",sans-serif;letter-spacing:.04em;text-transform:uppercase}
+.el .tag span{font-size:12px}
+.el .tag p{margin:6px 0 0;font-size:13px;line-height:1.45}
+
+.dymo{
+  display:inline-block;background:#1b1b1b;color:#f2f2f2;font:600 13px/1 "IBM Plex Mono",monospace;
+  letter-spacing:.14em;text-transform:uppercase;padding:6px 10px;
+  box-shadow:0 2px 0 #0007;transform:rotate(-1deg)
+}
+.contact{margin-top:34px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:16px 20px}
+.contact .handle{font:700 32px/1 "Barlow Condensed",sans-serif;letter-spacing:.03em}
+.contact p{margin:6px 0 0;font-size:13px;flex-basis:100%}
+
+footer{margin-top:26px;text-align:center}
+
+@media (max-width:760px){
+  .cabinet{margin:0;padding:28px 16px;border-left:0;border-right:0}
+  .row{grid-template-columns:1fr}
+  .el .face{aspect-ratio:2/1}
+}
+</style>
+</head>
+<body>
+<main class="cabinet">
+  <i class="screw tl"></i><i class="screw tr"></i><i class="screw bl"></i><i class="screw br"></i>
+
+  <header class="enamel">
+    <small>Dominó pult</small>
+    <h1>Forgalmi szimulátorok</h1>
+    <p>magyar állomások a forgalmi szolgálattevő székéből</p>
+  </header>
+
+  <div class="tiles" aria-hidden="true">
+    <svg viewBox="0 0 900 180">
+      <g fill="none" stroke="#ece6d2" stroke-width="8">
+        <path d="M0 72H900M0 126H900M234 126L288 99H612L666 72M270 72L324 45H576L630 72"/>
+      </g>
+      <path id="occ" fill="none" stroke="#d8321f" stroke-width="8" d=""/>
+      <g stroke="#111" stroke-width="3">
+        <circle cx="180" cy="50" r="9" fill="#38b34f"/><circle cx="201" cy="50" r="9" fill="#2a2a26"/>
+        <circle cx="720" cy="148" r="9" fill="#2a2a26"/><circle cx="699" cy="148" r="9" fill="#d8321f"/>
+      </g>
+      <g font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#ece6d2">
+        <text x="440" y="36">III</text><text x="446" y="64">I</text><text x="442" y="91">IV</text><text x="444" y="118">II</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="intro enamel">
+    <p>Böngészőben futó szimulátorok valódi magyar vasútállomásokról. Te állítod a vágányutat, kezeled a jelzőket, kérsz engedélyt a szomszéd állomástól, és figyelsz, hogy a vonatok időben menjenek.</p>
+    <p>A pultok a MÁV Dominó biztosítóberendezéseit követik, a menetrend a valóságból indul. Ha elfáradtál, átadhatod a szolgálatot az automatának, és bármikor visszaveheted. Telefonra appként is felrakható.</p>
+    <p>Hobbiprojekt, nem hivatalos MÁV-termék.</p>
+  </div>
+
+  <div class="row">
+    <a class="el" href="https://csovestom.github.io/dunaharaszti-forgalmi-sim/">
+      <div class="face"><svg viewBox="0 0 300 200"><g fill="none" stroke="currentColor" stroke-width="7"><path d="M0 80H300M0 120H300M80 120L110 150H190L220 120"/></g><circle cx="44" cy="62" r="8" fill="#38b34f" stroke="#111" stroke-width="3"/></svg><i class="knob" style="--c:#38b34f"></i></div>
+      <div class="tag enamel"><b>Dunaharaszti</b><span>150-es vonal · Dominó 55</span><p>Kétvágányú fővonal, elővárosi és tehervonatok.</p></div>
+    </a>
+    <a class="el" href="https://csovestom.github.io/koki-szimulator/">
+      <div class="face"><svg viewBox="0 0 300 200"><g fill="none" stroke="currentColor" stroke-width="7"><path d="M0 70H300M0 110H300M70 110L110 150H180L230 200M120 70L150 40H230L260 70"/></g><circle cx="44" cy="52" r="8" fill="#e8b72a" stroke="#111" stroke-width="3"/></svg><i class="knob" style="--c:#e8b72a"></i></div>
+      <div class="tag enamel"><b>Kőbánya-Kispest</b><span>100a · 142 · Dominó 70</span><p>Ceglédi fővonal és a lajosmizsei egyvágányú vonal csomópontja.</p></div>
+    </a>
+    <a class="el" href="https://csovestom.github.io/keleti-palyaudvar/">
+      <div class="face"><svg viewBox="0 0 300 200"><g fill="none" stroke="currentColor" stroke-width="7"><path d="M0 100H110M110 100L160 40H290M110 100L160 70H290M110 100H290M110 100L160 130H290"/><path d="M290 30V140" stroke-width="10"/></g><circle cx="50" cy="82" r="8" fill="#ece6d2" stroke="#111" stroke-width="3"/></svg><i class="knob" style="--c:#d8321f"></i></div>
+      <div class="tag enamel"><b>Budapest-Keleti</b><span>fejpályaudvar · Dominó 70</span><p>13 vágányos fejállomás, fordulókkal és járműcserével.</p></div>
+    </a>
+  </div>
+
+  <div class="contact enamel">
+    <span class="dymo">Javaslat · hiba · ötlet</span>
+    <span class="handle">@csovestom</span>
+    <p>Új állomást szeretnél, hibát találtál, vagy rossz a menetrend? Írj a @csovestom oldalnak.</p>
+  </div>
+
+  <footer><span class="dymo">Forgalmi szimulátorok</span></footer>
+</main>
+<script>
+(function(){
+  var p=document.getElementById('occ');
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var x=-108;
+  setInterval(function(){
+    x+=36;if(x>1000)x=-108;
+    var a=Math.max(0,x),b=Math.min(900,x+108);
+    p.setAttribute('d',b>a?'M'+a+' 72H'+b:'');
+  },500);
+})();
+</script>
+</body>
+</html>
