@@ -66,7 +66,7 @@ header p{margin:0;font-size:13px}
 .intro p{margin:0 0 10px}
 .intro p:last-child{margin:0;font-size:13px;opacity:.75}
 
-.row{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:30px}
+.row{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:30px}
 .el{display:block;text-decoration:none;color:var(--track)}
 .el .face{
   position:relative;aspect-ratio:3/2;
@@ -98,6 +98,7 @@ header p{margin:0;font-size:13px}
 
 footer{margin-top:26px;text-align:center}
 
+@media (max-width:1100px){.row{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:760px){
   .cabinet{margin:0;padding:28px 16px;border-left:0;border-right:0}
   .row{grid-template-columns:1fr}
@@ -149,6 +150,10 @@ footer{margin-top:26px;text-align:center}
     <a class="el" href="https://csovestom.github.io/keleti-palyaudvar/">
       <div class="face"><svg viewBox="0 0 300 200"><g fill="none" stroke="currentColor" stroke-width="7"><path d="M0 100H110M110 100L160 40H290M110 100L160 70H290M110 100H290M110 100L160 130H290"/><path d="M290 30V140" stroke-width="10"/></g><circle cx="50" cy="82" r="8" fill="#ece6d2" stroke="#111" stroke-width="3"/></svg><i class="knob" style="--c:#d8321f"></i></div>
       <div class="tag enamel"><b>Budapest-Keleti</b><span>fejpályaudvar · Dominó 70</span><p>13 vágányos fejállomás, fordulókkal és járműcserével.</p></div>
+    </a>
+    <a class="el" href="https://csovestom.github.io/kobanya-felso/">
+      <div class="face"><svg viewBox="0 0 300 200"><g fill="none" stroke="currentColor" stroke-width="7"><path d="M0 60H300M0 95H300M0 130H300M60 130L100 95M150 95L190 60M200 130L240 165H300"/></g><circle cx="40" cy="42" r="8" fill="#38b34f" stroke="#111" stroke-width="3"/></svg><i class="knob" style="--c:#2a2a26"></i></div>
+      <div class="tag enamel"><b>Kőbánya felső</b><span>80a · 120a · VES</span><p>Sokvágányos csomópont, VES forgatógombos pulttal.</p></div>
     </a>
   </div>
 
